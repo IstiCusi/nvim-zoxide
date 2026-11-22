@@ -1,0 +1,68 @@
+{
+  "errmsg": "",
+  "nvim": "0.12.6+v0.12.6",
+  "checks": [
+    "define_commands=false leaves commands undefined",
+    "Z, Zt and Zw commands remain available",
+    "Configured executable is used",
+    "success: callback runs once outside a fast event",
+    "Successful query returns its directory without warnings",
+    "missing: callback runs once outside a fast event",
+    "missing: callback receives nil",
+    "missing: one warning remains visible on the main loop",
+    "missing: warning retains the failure details",
+    "empty: callback runs once outside a fast event",
+    "empty: callback receives nil",
+    "empty: one warning remains visible on the main loop",
+    "empty: warning retains the failure details",
+    "Multiple matches can select a directory",
+    "Cancelling selection returns nil safely",
+    "Multiple-result queries use the selection UI",
+    "One result bypasses the selection UI",
+    "Failed add reports the database error safely",
+    "Successful add does not emit a warning",
+    "Z! changes the global working directory",
+    "tab: command preserves the global directory",
+    "tab: other window observes the correct directory scope",
+    "window: command preserves the global directory",
+    "window: other window observes the correct directory scope",
+    "Failed command keeps the working directory",
+    "Telescope global picker changes the correct directory scope",
+    "Telescope tab picker changes the correct directory scope",
+    "Telescope window picker changes the correct directory scope",
+    "No emitted editor errors or callback tracebacks",
+    "No deprecated APIs called in these workflows"
+  ],
+  "notifications": [
+    {
+      "message": "Zoxide failed: stderr=fixture: no matching directory",
+      "level": 3,
+      "fast": false
+    },
+    {
+      "message": "Zoxide failed: no matches found",
+      "level": 3,
+      "fast": false
+    },
+    {
+      "message": "Zoxide failed to increment dir: fixture: cannot write zoxide database",
+      "level": 3,
+      "fast": false
+    },
+    {
+      "message": "Zoxide failed: stderr=fixture: no matching directory",
+      "level": 3,
+      "fast": false
+    }
+  ],
+  "deprecations": [],
+  "messages": "Zoxide failed: stderr=fixture: no matching directory\nZoxide failed: no matches found\nZoxide failed to increment dir: fixture: cannot write zoxide database\nAlready only one tab page\nAlready only one window\nAlready only one tab page\nAlready only one window\nAlready only one tab page\nAlready only one tab page\nZoxide failed: stderr=fixture: no matching directory\nAlready only one tab page\nAlready only one window\nAlready only one tab page\nAlready only one window\nAlready only one tab page\nAlready only one window",
+  "passed": true,
+  "source_sha256": "fb3d38b2ac66b9eccb0f6b03ee55d0bb1d1ec64c7cd03a624a4ef9e87973bf02",
+  "cli": "Deterministic Python subprocess fixture; not the real zoxide database",
+  "telescope_tested": true,
+  "dependency_commits": {
+    "plenary": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+    "telescope": "1e1bab730218eaf97fce743be3f56e51075928ac"
+  }
+}

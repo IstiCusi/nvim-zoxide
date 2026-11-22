@@ -2,6 +2,15 @@
 
 A neovim plugin that provides helpful wrappers around [zoxide].
 
+This is [IstiCusi's fork](https://github.com/IstiCusi/nvim-zoxide) of
+[alfaix/nvim-zoxide](https://github.com/alfaix/nvim-zoxide). The original Git
+history, license, commands and Telescope integration are preserved.
+
+The fork schedules process completion handlers on Neovim's main loop. Failed
+queries, empty results and failed database updates can therefore display their
+warnings without `E5560`. User callbacks also run on the main loop when a query
+fails. Error messages remain visible; no notification or diagnostic is disabled.
+
 ## Features
 
 * Out-of-the-box commands (`:Z[!]`, `:Zt[!]`, `:Zw[!]`)
@@ -10,42 +19,33 @@ A neovim plugin that provides helpful wrappers around [zoxide].
 
 ## Installation
 
-This plugin depends on [plenary.nvim] and, optionally, on [telescope.nvim].
-Best to install with [lazy.nvim]:
+Install the `zoxide` executable separately and make it available in `$PATH`, or
+set `path` to its executable path. This plugin depends on [plenary.nvim] and,
+optionally, on [telescope.nvim]. A complete [lazy.nvim] plugin-spec file is:
 
 ```lua
-{
-    "alfaix/nvim-zoxide",
-    dependencies = {"nvim-lua/plenary.nvim"}
-    opts = {
-        -- will define Z[!], Zt[!], Zw[!] for :cd, :tcd, :lcd respectively 
-        -- set to false if you want to define different ones
-        define_commands = true,
-        -- path to zoxide executable; by default must be in $PATH
-        path = "zoxide",
-},
--- optional for telescope integration
-{
-    "nvim-telescope/telescope.nvim",
-    opts = {
-        -- your other telescope configuration is here
-        extensions = {
-            -- you can put theme options here, e.g.
-            -- ["zoxide"] = require"telescope.themes".get_dropdown({})
-            -- not that require"telescope.themes" will likely need moving 
-            -- this to config() instead of opts depending on your lazy setup
-            ["zoxide"] = {}
-        }
-    },
-    config = function(_, opts)
-        -- other stuff, such as require"telescope".setup(opts)
-        -- you can skip this but tab completion for it won't be available 
-        -- until it's lazy-loaded
-        -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#extensions
-        require"telescope".load_extension("zoxide")
-    end
+return {
+  "IstiCusi/nvim-zoxide",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  opts = {
+    -- Define Z[!], Zt[!] and Zw[!] for :cd, :tcd and :lcd.
+    define_commands = true,
+    path = "zoxide",
+  },
 }
 ```
+
+If your Telescope specification already lists `alfaix/nvim-zoxide` as a
+dependency, replace that entry with `IstiCusi/nvim-zoxide` and keep its existing
+options. Use one specification for the plugin, rather than both repository
+names. A `pin = true` added solely to protect local edits is no longer needed
+once the fixed commit is published in your fork.
+
+For Telescope, retain your existing setup and key mappings. Include
+`extensions = { zoxide = {} }` in its setup options, and call
+`require("telescope").load_extension("zoxide")` after
+`require("telescope").setup(opts)`. The plugin must be available as a Telescope
+dependency or already loaded at that point.
 
 ## Usage
 
@@ -64,6 +64,17 @@ docstrings. It is callback-based but you can convert it to coroutines via
 `plenary.async.wrap` or `nio`. For your own commands, just calling `zoxide.zoxide`
 with appropriate context should
 be sufficient.
+
+## Validation
+
+The regression suite passed 30 checks on each of Neovim **0.11.4** and
+**0.12.6**, including the three Telescope directory scopes. These are tested
+versions, not a guarantee for every future Neovim or dependency release.
+
+Tests use real Plenary subprocesses and a deterministic CLI fixture to exercise
+success, missing matches, empty output, selection cancellation and database
+errors. They do not modify your actual zoxide database. See
+[tests/README.md](tests/README.md) for commands and the recorded results.
 
 ## Alternatives
 * Just the telescope integration: [telescope-zoxide](https://github.com/jvgrootveld/telescope-zoxide).

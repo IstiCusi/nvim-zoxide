@@ -67,14 +67,15 @@ function M.increment(dir)
   Job:new({
     command = user_config.path,
     args = { "add", dir },
-    on_exit = function(j, return_val)
+    -- Plenary invokes on_exit in a fast event. Notifications need the main loop.
+    on_exit = vim.schedule_wrap(function(j, return_val)
       if return_val ~= 0 then
         vim.notify(
           "Zoxide failed to increment dir: " .. table.concat(j:stderr_result()),
           vim.log.levels.WARN
         )
       end
-    end,
+    end),
   }):start()
 end
 
@@ -91,7 +92,9 @@ function M.zoxide(context, callback)
   local job = Job:new({
     command = user_config.path,
     args = get_args(context),
-    on_exit = function(j, return_val)
+    -- Schedule the whole completion handler: user callbacks may use editor APIs
+    -- on failures too, not just when a query returns a directory.
+    on_exit = vim.schedule_wrap(function(j, return_val)
       if return_val ~= 0 then
         vim.notify("Zoxide failed: stderr=" .. table.concat(j:stderr_result()), vim.log.levels.WARN)
         callback(context, nil)
@@ -108,7 +111,7 @@ function M.zoxide(context, callback)
           end)
         end)
       end
-    end,
+    end),
   })
   job:start()
 end
